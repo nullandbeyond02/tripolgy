@@ -1,15 +1,57 @@
-# Tripolgy — updated prototype (November 2026)
+# Tripolgy
 
-A no-build travel planner in HTML, CSS, and JavaScript.
+**Make traveling easy.** The planner friend for your next group trip.
 
-## Important limitations before public launch
-- Account data, passwords, trip records, approvals, and uploaded covers live in **localStorage in the current browser**. This is a functional single-browser prototype, **not secure production authentication**. Do not enter a real password. Multiple devices cannot share the same accounts/trips; copying an invite URL alone will not grant access to a trip.
-- To launch for real users, add a hosted authentication/database/storage backend (for example, Supabase Auth, Postgres, and Storage) and enforce row-level security.
-- The AI travel planner calls public endpoints directly from the browser. They may fail, change behavior, or throttle. When AI generation fails, the interface falls back to a clearly marked sample plan. The sample itinerary is not verified and should not be relied upon for bookings.
-- Ratings/costs, when supplied by AI, are estimates, not confirmed data. Weather and map links use third-party services; live photo lookups require internet access.
-- Do not expose production AI API keys in browser settings; use a server-side proxy before deployment.
+Built for **IceHacks 2026** · 
 
-## Provider credits
-AI planning via Pollinations or optionally Gemini, forecast from Open-Meteo, place lookup via OpenStreetMap Nominatim, other-place imagery via Wikipedia, and the six provided destination images bundled locally.
+## Why I built it
 
-DISCLAIMER: USED CHATGPT HELP TO CREATE TRIPOLGY
+The flights are booked, everyone’s excited, and somehow nobody planned what to do. Even once someone makes a plan, changing one activity can mean another round of group texts and another round of budget math.
+
+Tripolgy turns a short survey into a day-by-day itinerary, then gives the group a way to discuss changes, decide who’s joining each activity, and see how those decisions affect the budget.
+
+## What you can do
+
+- **Build a trip around your group.** Add flights, lodging, and a budget for food and activities. Pick your pace, interests, dietary preferences, and must-see stops. Add friends by username or include guests without accounts.
+- **Review and edit the itinerary.** Switch between days, compare activity intensity, check available forecasts and estimated distances from your stay, and open stops in Google Maps. Add, move, or remove activities.
+- **Decide together.** Comment or react on individual stops. When a change needs approval, the original plan stays in place until everyone required has approved it.
+- **See what each person might spend.** Mark who’s attending each activity to update the estimated group total and each traveler’s share. You can also record planned contributions.
+- **Make each trip your own.** Reopen saved plans from **My Trips**, where you can keep the default destination cover when available or upload your own.
+
+## Run locally
+
+Tripolgy uses HTML, CSS, and JavaScript. There’s no build step or package installation. You’ll need Python for the local server commands below.
+
+1. Clone this repository or choose **Code → Download ZIP** on GitHub and extract it.
+2. Open the folder containing `index.html` in VS Code. Keep the `images` folder next to `index.html`.
+3. Open a terminal in that folder and run:
+
+   ```powershell
+   py -m http.server 5500
+   ```
+
+   On macOS or Linux, use `python3 -m http.server 5500` instead.
+
+4. Open [http://localhost:5500](http://localhost:5500) in your browser.
+
+### Try the group approval flow
+
+Create two test accounts in the **same browser profile at the same URL**. Log in as the first user, create a trip, and add the second user **by username** rather than as a guest. Propose moving an activity to another day. Then sign in as the second user, open the trip, and approve the request. Check that the activity moved to the new day.
+
+## How it works
+
+The planner turns survey answers into an AI prompt and requests structured itinerary data. JavaScript converts the response into editable activity cards. If the AI service doesn’t return a usable plan, Tripolgy shows a labeled sample itinerary so you can still try the editing workflow.
+
+The approval logic runs separately from the AI. It records proposed changes and applies them once the required approvals are in. Trips and changes are saved in the browser using `localStorage`.
+
+## Prototype limitations
+
+- **Collaboration works within one browser profile.** This prototype does not sync accounts, trips, or approvals across devices. Use a throwaway password. The invite button copies the site URL, not a link that grants access to a trip.
+- **Travel details are estimates.** Verify costs, hours, ratings, and accessibility before booking. The sample itinerary is not verified. Live AI, weather, and photo lookups depend on internet access and third-party services.
+- **Production deployment would need a backend.** Hosted authentication, shared storage, and server-side AI requests would support secure accounts and cross-device collaboration. Do not commit API keys.
+
+## Credits and AI disclosure
+
+Tripolgy uses Pollinations for AI planning with optional Google Gemini support, Open-Meteo for forecasts, OpenStreetMap Nominatim for place lookup, and Wikipedia for online destination imagery. The homepage also uses six bundled destination photos.
+
+ChatGPT and Claude were used as AI coding assistants during development.
